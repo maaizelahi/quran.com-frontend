@@ -188,7 +188,14 @@ export class Audioplayer extends Component {
   }
 
   handleAyahChange = (direction = 'next') => {
-    const { isPlaying, play, pause, currentVerse } = this.props; // eslint-disable-line no-shadow, max-len
+    const {
+      isPlaying,
+      play,
+      pause,
+      currentVerse,
+      repeat,
+      setRepeat
+    } = this.props; // eslint-disable-line no-shadow, max-len
     const previouslyPlaying = isPlaying;
 
     if (isPlaying) pause();
@@ -201,6 +208,15 @@ export class Audioplayer extends Component {
     this.handleScrollTo(nextVerse);
 
     this.preloadNext();
+    if (repeat.from && repeat.from === repeat.to) {
+      const nextAyah = nextVerse.split(':').map(val => parseInt(val, 10))[0];
+      if (repeat.from !== nextAyah) {
+        setRepeat({
+          from: nextAyah,
+          to: nextAyah
+        });
+      }
+    }
 
     if (previouslyPlaying) play();
 
